@@ -31,3 +31,27 @@ minetest.register_chatcommand("irc_sc", {
         return true, "Command executed."
     end,
 })
+
+
+
+minetest.register_chatcommand("del_snippet", {
+    params = "<snippet_name>",
+    description = "Löscht ein Snippet",
+    privs = {server = true, worldedit = true},
+    func = function(name, param)
+        if param == "" then
+            return false, "Bitte gib den Namen des Snippets an."
+        end
+        local snippet_name = param
+        minetest.chat_send_player(name, "Versuche, das Snippet '" .. snippet_name .. "' zu löschen...")
+        local success, err = pcall(function()
+            snippets.unregister_snippet(snippet_name)
+        end)
+        if success then
+            return true, "Snippet '" .. snippet_name .. "' wurde erfolgreich gelöscht."
+        else
+            return false, "Fehler beim Löschen des Snippets: " .. err
+        end
+    end,
+})
+
